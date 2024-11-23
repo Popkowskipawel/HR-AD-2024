@@ -1,3 +1,3 @@
 # HR-AD-2024
-Projekt zespołowy
-zmieniam coś
+
+Projekt zespołowy zmieniam coś
