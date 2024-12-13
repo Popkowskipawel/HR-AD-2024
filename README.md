@@ -11,7 +11,7 @@ install.packages("naniar")
 library(naniar)
 vis_miss(HR)
 miss_var_summary(HR)
-#jak możemy zauważyć, braki danych występują w kolumnach Age (7%), Attrition(10%) oraz Monthly Income(10%)
+#braki danych występują w kolumnach Age (7%), Attrition(10%) oraz Monthly Income(10%)
 gg_miss_upset(HR)
 gg_miss_var(HR)
 
