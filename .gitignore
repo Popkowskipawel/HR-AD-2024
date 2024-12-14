@@ -2,3 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+# Ignore cache and temporary files from R Markdown
+.Rhistory
+.RData
+.Rproj.user
+
+# Ignore files from the cache folder created during R Markdown rendering
+/cache/
+
+# Ignore the _packages folder that contains packages installed for this project
+/_packages/
