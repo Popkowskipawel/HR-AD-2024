@@ -32,5 +32,17 @@ duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
 library(naniar)
 vis_miss(HR)
 miss_var_summary(HR)
+gg_miss_upset(HR)
+gg_miss_var(HR)
+```
+Zmienną Attrition zmienimy na typ factor
+```{r}
+HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
+```
+Imputacja danych
+```{r}
+library(mice)
+HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
+complete_data <- complete(HR_imputed)
 ```
 
