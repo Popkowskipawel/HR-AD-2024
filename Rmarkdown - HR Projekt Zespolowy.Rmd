@@ -1,0 +1,36 @@
+---
+title: "Projekt Zespolowy HR"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    default_style: "light"
+    downcute_theme: "default"
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(readr)
+HR=read.csv("HR.csv")
+```
+## Wstęp
+### Usuwanie zbędnych kolumn
+```{r}
+HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
+```
+### Wykrycie duplikatów
+```{r}
+duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
+```
+### Wartośći brakujące
+```{r}
+library(naniar)
+vis_miss(HR)
+miss_var_summary(HR)
+```
+
