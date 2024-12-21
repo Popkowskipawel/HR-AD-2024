@@ -58,12 +58,12 @@ find_outliers <- function(x) {
 }
 
 # Zidentyfikuj odstające wartości dla kolumn liczbowych
-num_cols <- sapply(complete_data, is.numeric)
-odstajace <- lapply(complete_data[, num_cols], find_outliers)
-
-# Wyświetl wyniki
-odstajace
+boxplot(complete_data$YearsAtCompany)
+boxplot(complete_data$NumCompaniesWorked)
+boxplot(complete_data$PerformanceRating)
+boxplot(complete_data$StockOptionLevel)
+boxplot(complete_data$TotalWorkingYears)
 ```
-View(odstajace)
+
 
 
