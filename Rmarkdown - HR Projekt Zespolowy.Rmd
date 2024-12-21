@@ -46,3 +46,24 @@ HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
 complete_data <- complete(HR_imputed)
 ```
 
+```{r}
+# Funkcja do identyfikacji odstających wartości (bazuje na IQR)
+find_outliers <- function(x) {
+  Q1 <- quantile(x, 0.25, na.rm = TRUE)
+  Q3 <- quantile(x, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  which(x < lower_bound | x > upper_bound)
+}
+
+# Zidentyfikuj odstające wartości dla kolumn liczbowych
+num_cols <- sapply(complete_data, is.numeric)
+odstajace <- lapply(complete_data[, num_cols], find_outliers)
+
+# Wyświetl wyniki
+odstajace
+```
+View(odstajace)
+
+
