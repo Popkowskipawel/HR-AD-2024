@@ -1,32 +1,66 @@
----
-title: "Wizualizacje"
-author: "Zuzanna Jurkowska"
-date: "`r Sys.Date()`"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#Sprawdzenie struktury danych
+```{r}
+str(HR_cleaned)
 ```
 
-## R Markdown
+#Wykreślanie mapy korelacji
+```{r}
+library(ggplot2)
+library(reshape2)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+mapa_cieplna <- melt(korelacje)
+ggplot(data = mapa_cieplna, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1,1), space = "Lab", name="Korelacja") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1)) +
+  coord_fixed()
 ```
 
-## Including Plots
+#Nadgodziny a satysfakcja z pracy
+```{r}
+# Średnia satysfakcja z pracy
+srednia_satysfakcja <- aggregate(JobSatisfaction ~ OverTime, data = HR_cleaned, FUN = mean)
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+head(srednia_satysfakcja)
+```
+```{r}
+# Wykres słupkowy
+ggplot(srednia_satysfakcja, aes(x = OverTime, y = JobSatisfaction, fill = OverTime)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Średnia satysfakcja z pracy a nadgodziny",
+       x = "Nadgodziny",
+       y = "Średnia satysfakcja z pracy") +
+  theme_minimal()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+# Wykres punktowy dla obu grup ze względu na zbliżony wynik
+ggplot(HR_cleaned, aes(x = OverTime, y = JobSatisfaction, color = OverTime)) +
+  geom_jitter(width = 0.2, alpha = 0.6) +
+  labs(title = "Rozkład satysfakcji z pracy a nadgodziny",
+       x = "Nadgodziny",
+       y = "Satysfakcja z pracy") +
+  theme_minimal()
+```
+
+#Stan cywilny a satysfakcja z pracy
+```{r}
+# Wykres pudełkowy
+ggplot(HR_cleaned, aes(x = MaritalStatus, y = JobSatisfaction, fill = MaritalStatus)) +
+  geom_boxplot() +
+  labs(title = "Wpływ stanu cywilnego na satysfakcję z pracy",
+       x = "Stan cywilny",
+       y = "Satysfakcja z pracy") +
+  theme_minimal()
+```
+
+```{r}
+#Sprawdzenie danych ze względu na zbliżone wyniki
+aggregate(JobSatisfaction ~ MaritalStatus, data = HR_cleaned, FUN = summary)
+
+#Średnia dla każdej grupy (Divorced, Married, Single) jest zbliżona, co wskazuje na to, że status cywilny nie ma wpływu na satysfakcję z pracy. Może to sugerować, że inne czynniki, takie jak wynagrodzenie, mają większe znaczenie.
+```
+
 
 
