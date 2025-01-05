@@ -67,3 +67,29 @@ boxplot(complete_data$TotalWorkingYears)
 
 
 
+#Sprawdzenie struktury danych
+```{r}
+str(complete_data)
+```
+
+#Wykreślanie mapy korelacji
+
+```{r}
+#Mapa korelacji vs. Attrition
+complete_data$Attrition <- ifelse(complete_data$Attrition == "Yes", 1, 0)
+dane_numeryczne <- complete_data[sapply(complete_data, is.numeric)]
+korelacje <- cor(dane_numeryczne, use = "complete.obs")
+
+install.packages("ggplot2")
+install.packages("reshape2")
+library(ggplot2)
+library(reshape2)
+
+mapa_korelacji <- melt(korelacje)
+ggplot(data = mapa_korelacji, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1,1), space = "Lab", name="Korelacja") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, size = 8, hjust = 1)) +
+  coord_fixed()
+```
