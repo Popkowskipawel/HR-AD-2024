@@ -1,3 +1,70 @@
+---
+title: "Projekt Zespolowy HR"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    default_style: "light"
+    downcute_theme: "default"
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(readr)
+HR=read.csv("HR.csv")
+```
+## Wstęp
+### Usuwanie zbędnych kolumn
+```{r}
+HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
+```
+### Wykrycie duplikatów
+```{r}
+duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
+```
+### Wartośći brakujące
+```{r}
+library(naniar)
+vis_miss(HR)
+miss_var_summary(HR)
+gg_miss_upset(HR)
+gg_miss_var(HR)
+```
+Zmienną Attrition zmienimy na typ factor
+```{r}
+HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
+```
+Imputacja danych
+```{r}
+library(mice)
+HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
+complete_data <- complete(HR_imputed)
+```
+
+```{r}
+# Funkcja do identyfikacji odstających wartości (bazuje na IQR)
+find_outliers <- function(x) {
+  Q1 <- quantile(x, 0.25, na.rm = TRUE)
+  Q3 <- quantile(x, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  which(x < lower_bound | x > upper_bound)
+}
+
+# Zidentyfikuj odstające wartości dla kolumn liczbowych
+boxplot(complete_data$YearsAtCompany)
+boxplot(complete_data$NumCompaniesWorked)
+boxplot(complete_data$PerformanceRating)
+boxplot(complete_data$StockOptionLevel)
+boxplot(complete_data$TotalWorkingYears)
+```
+
 #Sprawdzenie struktury danych
 ```{r}
 str(HR_cleaned)
