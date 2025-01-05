@@ -18,16 +18,23 @@ library(dplyr)
 library(readr)
 HR=read.csv("HR.csv")
 ```
+
 ## Wstęp
+
 ### Usuwanie zbędnych kolumn
+
 ```{r}
 HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
 ```
+
 ### Wykrycie duplikatów
+
 ```{r}
 duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
 ```
+
 ### Wartośći brakujące
+
 ```{r}
 library(naniar)
 vis_miss(HR)
@@ -35,11 +42,15 @@ miss_var_summary(HR)
 gg_miss_upset(HR)
 gg_miss_var(HR)
 ```
+
 Zmienną Attrition zmienimy na typ factor
+
 ```{r}
 HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
 ```
+
 Imputacja danych
+
 ```{r}
 library(mice)
 HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
@@ -65,5 +76,9 @@ boxplot(complete_data$StockOptionLevel)
 boxplot(complete_data$TotalWorkingYears)
 ```
 
+Wizualizacja danych
 
+```{r}
+library(ggplot2)
+```
 
