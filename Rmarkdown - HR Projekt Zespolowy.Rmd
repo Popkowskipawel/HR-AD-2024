@@ -76,9 +76,5 @@ boxplot(complete_data$StockOptionLevel)
 boxplot(complete_data$TotalWorkingYears)
 ```
 
-Wizualizacja danych
 
-```{r}
-library(ggplot2)
-```
 
