@@ -65,5 +65,20 @@ boxplot(complete_data$StockOptionLevel)
 boxplot(complete_data$TotalWorkingYears)
 ```
 
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$OverTime <- as.factor(complete_data$OverTime)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = OverTime, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Liczba pracowników z nadgodzinami a rotacja",
+    x = "Nadgodziny",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
 
 
