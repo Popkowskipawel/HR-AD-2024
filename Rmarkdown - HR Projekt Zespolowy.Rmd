@@ -82,3 +82,58 @@ Wizualizacja danych
 library(ggplot2)
 ```
 
+```{r}
+```
+
+
+```{r}
+library(gtsummary)
+complete_data %>%
+  select(Attrition,MonthlyIncome) %>%
+  tbl_summary(
+    by=Attrition,
+    type = all_continuous() ~ "continuous2",
+    statistic = all_continuous() ~ c(
+      "{N_nonmiss}","{mean}","{sd}",
+      "{median} ({p25}, {p75})",
+      "{min}, {max}"),
+    missing = "no",
+    label = MonthlyIncome ~ "Przychód") %>%
+  modify_header(label ~ "**Zmienna**") %>%
+  modify_caption("**Tabela 1. Rozkład cen wg liczby pokoi**") %>%
+  bold_labels() %>% 
+  add_p(pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+
+```{r}
+# Upewniamy się, że Attrition to faktor
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+
+# Generowanie wykresu pudełkowego z dodaniem średniej
+ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
+  geom_boxplot(outlier.color = "red", outlier.size = 2, alpha = 0.7) +
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 18, 
+    size = 3, 
+    color = "black",
+    position = position_dodge(width = 0.75)
+  ) +
+  labs(
+    title = "Rozkład przychodów według statusu rotacji z zaznaczoną średnią",
+    x = "Status rotacji (Attrition)",
+    y = "Miesięczny przychód",
+    fill = "Status rotacji"
+  ) +
+  scale_fill_manual(values = c("#FFA07A", "#87CEEB")) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.position = "none"
+  )
+```
+
