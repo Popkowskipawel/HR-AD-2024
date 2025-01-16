@@ -97,11 +97,47 @@ ggplot(complete_data, aes(x = MaritalStatus, fill = Attrition)) +
   ) +
   theme_minimal()
 ```
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Konwersja zmiennych na odpowiednie typy
+complete_data$MaritalStatus <- as.factor(complete_data$MaritalStatus)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+
+# Obliczenie procentów w każdej grupie
+complete_data_summary <- complete_data %>%
+  group_by(MaritalStatus, Attrition) %>%
+  summarise(count = n()) %>%
+  group_by(MaritalStatus) %>%
+  mutate(percent = count / sum(count) * 100)
+
+# Tworzenie wykresu
+ggplot(complete_data_summary, aes(x = MaritalStatus, y = count, fill = Attrition)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), 
+            position = position_dodge(width = 0.8), 
+            vjust = -0.5, 
+            size = 3.5) +  # Zmniejszenie czcionki procentów
+  labs(
+    title = "Stan cywilny a rotacja",
+    x = "Stan cywilny",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  scale_fill_manual(values = c("#4CAF50", "#FF9800")) +  # Zmiana kolorów na bardziej stonowane
+  theme_minimal(base_size = 15) +  # Użycie minimalnej tematyki z większą czcionką
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Obrócenie etykiet osi X
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Wyrównanie tytułu
+    legend.position = "top"  # Pozycjonowanie legendy
+  )
+```
 
 
 ```{r}
 # Wykres słupkowy
-library(ggplot2)
+library(ggplot2)=
 complete_data$JobRole <- as.factor(complete_data$JobRole)
 complete_data$Attrition <- as.factor(complete_data$Attrition)
 ggplot(complete_data, aes(x = JobRole, fill = Attrition)) +
