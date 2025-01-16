@@ -82,3 +82,196 @@ ggplot(complete_data, aes(x = OverTime, fill = Attrition)) +
 ```
 
 
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$MaritalStatus <- as.factor(complete_data$MaritalStatus)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = MaritalStatus, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Stan cywilny a rotacja",
+    x = "Stan cywilny",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$JobRole <- as.factor(complete_data$JobRole)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = JobRole, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Stanowisko pracy a rotacja",
+    x = "Stanowisko pracy",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$Gender <- as.factor(complete_data$Gender)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = Gender, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Płeć a rotacja",
+    x = "Płeć",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$EducationField <- as.factor(complete_data$EducationField)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = EducationField, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Wykształcenie/dziedzina a rotacja",
+    x = "Wykształcenie/dziedzina",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$Department <- as.factor(complete_data$Department)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = Department, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Dział a rotacja",
+    x = "Dział",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$BusinessTravel <- as.factor(complete_data$BusinessTravel)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = BusinessTravel, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Podróż służbowa",
+    x = "Podróż służbowa",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$OverTime <- as.factor(complete_data$OverTime)
+complete_data$Age <- as.factor(complete_data$Age)
+ggplot(complete_data, aes(x = OverTime, fill = Age)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Nadgodziny a wiek",
+    x = "Nadgodziny",
+    y = "Liczba pracowników",
+    fill = "Wiek"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$YearsAtCompany <- as.factor(complete_data$YearsAtCompany)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = YearsAtCompany, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Łączna liczba lat pracy",
+    x = "Łączna liczba lat pracy",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$Education <- as.factor(complete_data$Education)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = Education, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Edu",
+    x = "Edu",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Wykres słupkowy
+library(ggplot2)
+complete_data$NumCompaniesWorked <- as.factor(complete_data$NumCompaniesWorked)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+ggplot(complete_data, aes(x = NumCompaniesWorked, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Liczba przepracowanych firm",
+    x = "Liczba przepracowanych firm",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+```{r}
+ggplot(complete_data, aes(x = NumCompaniesWorked, fill = Attrition)) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~Gender) +
+  labs(
+    title = "Liczba przepracowanych firm w zależności od rotacji i płci",
+    x = "Liczba przepracowanych firm",
+    y = "Liczba pracowników",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal()
+```
+```{r}
+
+```
+
+
+```{r}
+complete_data %>%
+  group_by(DistanceFromHome, Attrition) %>%
+  summarise(count = n()) %>%
+  group_by(DistanceFromHome) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  ggplot(aes(x = DistanceFromHome, y = percentage, fill = Attrition)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(
+    title = "Procentowy rozkład rotacji według dystansu od miejsca pracy",
+    x = "Dystans od miejsca pracy",
+    y = "Procent (%)"
+  ) +
+  theme_minimal()
+```
+
