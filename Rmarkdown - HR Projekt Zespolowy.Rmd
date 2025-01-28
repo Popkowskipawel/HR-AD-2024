@@ -55,13 +55,15 @@ gg_miss_upset(HR)
 gg_miss_var(HR)
 ```
 
-Zmienną Attrition zmienimy na typ factor
+###Zmienną Attrition zapisaną jako zwykły test zmieniliśmy na typ factor.
 
 ```{r}
 HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
 ```
 
 ## Imputacja danych
+
+###Do imputacji danych wykorzystaliśmy metodę wielokrotnej imputacji przy użyciu biblioteki mice. Umożliwiło nam to estymację brakujących wartości na podstawie pozostałych zmiennych oraz charakteryzujących je wzorców. Co więcej, metoda wielokrotnej imputacji jest bardziej wiarygodna niż np. bazowanie na średniej. Pozwala ona zachować naturalny rozkład danych, w tym ich zmienność.
 
 ```{r}
 library(mice)
@@ -70,6 +72,8 @@ complete_data <- complete(HR_imputed)
 ```
 
 ## Identyfikacja odstających danych
+
+### Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
 
 ```{r}
 # Funkcja do identyfikacji odstających wartości (bazuje na IQR)
@@ -92,6 +96,8 @@ boxplot(complete_data$TotalWorkingYears)
 
 # Analiza opisowa
 
+### Do naszej analizyv opisowej użyliśmy biblioteki ggplot2. Dzięki niej stworzyliśmy wykres pudełkowy, który wizualizuje rozkład zarobków w zależności od attrition, czyli rotacji pracownika. Wykres pomaga nam zrozumieć, czy istnieje różnica w zarobkach pracowników, którzy opuścili firmę oraz tych, którzy zdecydowali się kontynuować swoją karierę. 
+
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -107,6 +113,7 @@ ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
   theme_minimal()
 
 ```
+### Na powyższym wykresie widzimy, że 
 
 # Wizualizacja danych
 
