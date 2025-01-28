@@ -20,7 +20,14 @@ HR=read.csv("HR.csv")
 ```
 
 # Wstęp
+
+### W dzisiejszym dynamicznym świecie korporacyjnym, zrozumienie i przewidywanie odejść pracowników, określane w naszej analizie jako attrition, staje się kluczowe dla utrzymania stabilności i wzrostu organizacji. W niniejszym projekcie zbadaliśmy wpływ zmiennych w organizacji (np. stawka godzinowa, dział) oraz zmiennych osobistych (stan cywilny, odległość od pracy) na attrition. 
+
+#Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zniejszyć rotację w firmie.
+
 # Data Cleansing, Wrangling
+
+### Poprzez dokładne czyszczenie danych, w tym usunięcie zbędnych kolumn oraz duplikatów, a także adresowanie brakujących i odstających wartości, tworzymy bazę do naszej analizy.
 
 ## Usuwanie zbędnych kolumn
 
