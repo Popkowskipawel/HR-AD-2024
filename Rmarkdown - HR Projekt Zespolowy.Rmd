@@ -41,7 +41,11 @@ HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours)
 duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
 ```
 
-## Wartośći brakujące
+## Wartości brakujące
+
+###Do identyfikacji wartości brakujących użyliśmy biblioteki naniar. Przy użyciu funkcji vis_miss oraz gg_miss_var przygotowaliśmy wizualizację brakujących danych w naszym zbiorze. Przeanalizowaliśmy również procent brakujących danych. 
+
+###Każdy z powyższych kroków jest kluczowy dla uzyskania miarodajnych wartości i wiarygodnych wyników analizy.
 
 ```{r}
 library(naniar)
