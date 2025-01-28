@@ -19,21 +19,22 @@ library(readr)
 HR=read.csv("HR.csv")
 ```
 
-## Wstęp
+# Wstęp
+# Data Cleansing, Wrangling
 
-### Usuwanie zbędnych kolumn
+## Usuwanie zbędnych kolumn
 
 ```{r}
 HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
 ```
 
-### Wykrycie duplikatów
+## Wykrycie duplikatów
 
 ```{r}
 duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
 ```
 
-### Wartośći brakujące
+## Wartośći brakujące
 
 ```{r}
 library(naniar)
@@ -49,13 +50,15 @@ Zmienną Attrition zmienimy na typ factor
 HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
 ```
 
-Imputacja danych
+## Imputacja danych
 
 ```{r}
 library(mice)
 HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
 complete_data <- complete(HR_imputed)
 ```
+
+## Identyfikacja odstających danych
 
 ```{r}
 # Funkcja do identyfikacji odstających wartości (bazuje na IQR)
@@ -76,5 +79,148 @@ boxplot(complete_data$StockOptionLevel)
 boxplot(complete_data$TotalWorkingYears)
 ```
 
+# Analiza opisowa
 
+```{r}
+library(ggplot2)
+library(dplyr)
 
+# Boxplot 1: Rozkład MonthlyIncome w zależności od Attrition
+ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
+  geom_boxplot() +
+  labs(
+    title = "Rozkład miesięcznych zarobków w zależności od rotacji",
+    x = "Rotacja (Attrition)",
+    y = "Miesięczne zarobki (Monthly Income)"
+  ) +
+  theme_minimal()
+
+```
+
+# Wizualizacja danych
+
+```{r}
+library(ggplot2)
+
+# Konwersja kolumn na czynniki
+complete_data$OverTime <- as.factor(complete_data$OverTime)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+
+# Tworzenie wykresu kołowego z procentowym udziałem
+ggplot(complete_data, aes(x = "", fill = Attrition)) +
+  geom_bar(position = "fill") +  # Użyj position = "fill" dla procentowego udziału
+  coord_polar(theta = "y") +  # Zamiana wykresu słupkowego na kołowy
+  labs(
+    title = "Procentowy udział rotacji w zależności od nadgodzin",
+    fill = "Rotacja (Attrition)"
+  ) +
+  scale_y_continuous(labels = scales::percent) +  # Formatowanie osi Y jako procenty
+  facet_wrap(~OverTime) +  # Facetowanie po kolumnie OverTime
+  theme_minimal() +
+  theme(axis.text.x = element_blank())  # Usunięcie etykiet na osi X
+
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Konwersja kolumn na czynniki (jeśli jeszcze nie zostały przekonwertowane)
+complete_data$JobRole <- as.factor(complete_data$JobRole)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+
+# Obliczenie procentów
+percent_data <- complete_data %>%
+  group_by(JobRole, Attrition) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  group_by(JobRole) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+# Tworzenie wykresu słupkowego z procentowym udziałem
+ggplot(percent_data, aes(x = JobRole, y = percentage, fill = Attrition)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(
+    title = "Procentowy udział rotacji wg stanowiska pracy",
+    x = "Stanowisko pracy",
+    y = "Procent (%)",
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Obrót etykiet osi X dla lepszej czytelności
+  geom_text(aes(label = paste0(round(percentage, 1), "%")),  # Dodanie etykiet z procentami
+            position = position_stack(vjust = 0.5), size = 3)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+complete_data$Gender <- as.factor(complete_data$Gender)
+complete_data$Attrition <- as.factor(complete_data$Attrition)
+
+complete_data %>%
+  group_by(Gender, Attrition) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  ggplot(aes(x = "", y = percentage, fill = Attrition)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +  
+  facet_wrap(~ Gender) +  
+  labs(
+    title = "Płeć a rotacja",
+    x = NULL,
+    y = NULL,
+    fill = "Rotacja (Attrition)"
+  ) +
+  theme_minimal() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank()) + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")),  
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))  # Właściwe umiejscowienie
+
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+complete_data$Age <- as.numeric(as.character(complete_data$Age))
+
+complete_data %>%
+  group_by(Age, Attrition) %>%
+  summarise(count = n()) %>%
+  group_by(Age) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  ggplot(aes(x = Age, y = percentage, fill = Attrition)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(
+    title = "Procentowy rozkład rotacji według wieku",
+    x = "Wiek",
+    y = "Procent (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 8)) +  
+  scale_x_continuous(breaks = seq(min(complete_data$Age), max(complete_data$Age), by = 2)) +
+  scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
+```
+
+```{r}
+complete_data %>%
+  group_by(DistanceFromHome, Attrition) %>%
+  summarise(count = n()) %>%
+  group_by(DistanceFromHome) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  ggplot(aes(x = DistanceFromHome, y = percentage, fill = Attrition)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(
+    title = "Procentowy rozkład rotacji według dystansu od miejsca pracy",
+    x = "Dystans od miejsca pracy",
+    y = "Procent (%)"
+  ) +
+  theme_minimal() + 
+  scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
+```
+
+# Wnioskowanie
