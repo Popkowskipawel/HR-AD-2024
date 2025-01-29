@@ -132,9 +132,9 @@ complete_data %>%
       "{median}" ,"{p25}","{p75}",
       "{min}", "{max}"),
     missing = "no",
-    label = MonthlyIncome ~ "Cena") %>%
+    label = MonthlyIncome ~ "Dochód") %>%
   modify_header(label ~ "**Zmienna**") %>%
-  modify_caption("**Tabela 1. Rozkład cen wg liczby pokoi**") %>%
+  modify_caption("**Tabela 1. Rozkład dochodów wg rotacji**") %>%
   bold_labels() %>% 
   add_p(pvalue_fun = ~ style_pvalue(.x, digits = 2))
 ```
@@ -252,7 +252,6 @@ ggplot(gender_attrition_summary, aes(x = "", y = percentage, fill = Attrition)) 
   scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))
 ```
 
-```
 Poniższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi więcej mężczyzn (17%) niż kobiet (14.6%)
 
 ```{r}
