@@ -119,6 +119,7 @@ ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
 
 ```
 
+Na powyższym wykresie widzimy rozkład miesięcznych zarobków pracowników w zależności od ich rotacji. Mediana dla pracowników, którzy pozostali w firmie jest wyższa niż dla tych, którzy odeszli. Na podstawie naszej analizy możemy stwierdzić, że pracownicy z niższymi zarobkami mogą być bardziej skłonni do odejścia. Może to być sugestią do dalszej analizy oraz zmian w strukturze wynagrodzeń w firmie.
 
 ```{r kable_report2, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 library(gtsummary)
@@ -132,20 +133,25 @@ complete_data %>%
       "{median}" ,"{p25}","{p75}",
       "{min}", "{max}"),
     missing = "no",
-    label = MonthlyIncome ~ "Cena") %>%
+    label = MonthlyIncome ~ "Dochód") %>%
   modify_header(label ~ "**Zmienna**") %>%
-  modify_caption("**Tabela 1. Rozkład cen wg liczby pokoi**") %>%
+  modify_caption("**Rozkład dochodu względem rotacji**") %>%
   bold_labels() %>% 
   add_p(pvalue_fun = ~ style_pvalue(.x, digits = 2))
 ```
 
 
-
-Na powyższym wykresie widzimy, że
-
 # Wizualizacja danych
 
-Wykreślanie mapy korelacji
+## Mapa korelacji
+
+Wykreślając mapę korelacji tworzymy macierz, która prezentuje relacje między różnymi zmiennymi numerycznymi w zbiorze danych. 
+
+Im intensywniejszy kolor, tym silniejsza jest korelacja.
+
+Czerwień wskazuje na dodatnią korelację, niebieskie kolory oznaczają korelację ujemną, a biel/szarość oznacza brak istotnej korelacji między zmiennymi.
+
+W celu stworzenia poniższej mapy, zmieniliśmy zmienne kategoryczne nominalne na zmienne numeryczne. 
 
 ```{r}
 #Mapa korelacji vs. Attrition
@@ -185,6 +191,14 @@ ggplot(complete_data, aes(x = "", fill = Attrition)) +
 
 ```
 
+Na powyższym wykresie kołowym widzimy dane dotyczące wpływu nadgodzin na decyzję o odejściu z pracy. Wyższy odsetek osób opuszczających firmę w grupie osób z nadgodzinami może sugerować, że nadgodziny wpływają negatywnie na satysfakcję z pracy i są jedną z przyczyn jej zmiany.
+
+Z kolei wykres słupkowy ilustruje procentowy udział rotacji pracowników według stanowiska. Wartość 0 oraz kolor czerwony oznaczają pracowników, którzy zdecydowali się pozostać w firmie. Wartość 1 oraz kolor turkusowy oznaczają osoby, które odeszły z firmy.
+
+Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją. 
+
+Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Skincare Representatives (7.6%). 
+
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -211,6 +225,8 @@ ggplot(percent_data, aes(x = JobRole, y = percentage, fill = Attrition)) +
   geom_text(aes(label = paste0(round(percentage, 1), "%")),  
             position = position_stack(vjust = 0.5), size = 3)
 ```
+
+Poniższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi więcej mężczyzn (17%) niż kobiet (14.6%).
 
 ```{r}
 library(ggplot2)
@@ -266,7 +282,7 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
 ```
 
-Z wykresu można zauważyć większą tendencję do rotacji, pracowników w młodszym wieku.
+Z wykresu można zauważyć większą tendencję do rotacji pracowników w młodszym wieku. Wraz ze wzrostem wieku, poza niewielkimi wyjątkami, wzrasta również rotacja.
 
 ```{r}
 complete_data %>%
@@ -285,5 +301,6 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
 ```
 
-Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom 
+Powyższy wykres obrazuje rozkład rotacji według dystansu od miejsca pracy. Większość pracowników nie decyduje się na zmianę pracy ze względu na czas dojazdu, jednak widzimy na wykresie tendencję wzrostową wraz ze wrostem liczby kilometrów oddzielających pracownika od miejsca pracy. Szczególnie zauważalne jest to dla wartości powyżej 8 km.
+
 # Wnioskowanie
