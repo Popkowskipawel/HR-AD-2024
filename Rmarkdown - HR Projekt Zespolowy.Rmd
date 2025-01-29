@@ -118,7 +118,7 @@ ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
   theme_minimal()
 
 ```
-
+Na powyższym wykresie pudełkowym widzimy jak rozkładają się miesięczne zarobki w zależności od lojalności pracowników. Mediana miesięcznych zarobków dla pracowników, którzy zostali w firmie jest wyższa niż dla pracowników, którzy zmienili pracę. Dane sugerują, że pracownicy z niższymi zarobkami mogą być bardziej skłonni do odejścia.
 
 ```{r kable_report2, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 library(gtsummary)
@@ -140,12 +140,17 @@ complete_data %>%
 ```
 
 
-
-Na powyższym wykresie widzimy, że
-
 # Wizualizacja danych
 
-Wykreślanie mapy korelacji
+## Mapa korelacji
+
+Wykreślając mapę korelacji tworzymy macierz, która prezentuje relacje między różnymi zmiennymi numerycznymi w zbiorze danych. 
+
+Im intensywniejszy kolor, tym silniejsza jest korelacja.
+
+Czerwień wskazuje na dodatnią korelację, niebieskie kolory oznaczają korelację ujemną, a biel/szarość oznacza brak istotnej korelacji między zmiennymi.
+
+W celu stworzenia poniższej mapy, zmieniliśmy zmienne kategoryczne nominalne na zmienne numeryczne.
 
 ```{r}
 #Mapa korelacji vs. Attrition
@@ -187,6 +192,7 @@ ggplot(complete_data, aes(x = "", fill = Attrition)) +
 
 ```
 
+
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -213,38 +219,41 @@ ggplot(percent_data, aes(x = JobRole, y = percentage, fill = Attrition)) +
   geom_text(aes(label = paste0(round(percentage, 1), "%")),  
             position = position_stack(vjust = 0.5), size = 3)
 ```
+Poniższy wykres słupkowy ilustruje procentowy udział rotacji pracowników według stanowiska. Wartość 0 oraz kolor czerwony oznaczają pracowników, którzy zdecydowali się pozostać w firmie. Wartość 1 oraz kolor turkusowy oznaczają osoby, które odeszły z firmy.
+
+Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją. 
+
+Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Skincare Representatives (7.6%).
 
 ```{r}
 library(ggplot2)
 library(dplyr)
-
+ 
 complete_data$Gender <- as.factor(complete_data$Gender)
 complete_data$Attrition <- as.factor(complete_data$Attrition)
 
-complete_data %>%
-  group_by(Gender, Attrition) %>%
-  summarise(count = n()) %>%
-  mutate(percentage = count / sum(count) * 100) %>%
-  ggplot(aes(x = "", y = percentage, fill = Attrition)) +
+gender_attrition_summary <- complete_data %>%
+  count(Gender, Attrition) %>%
+  group_by(Gender) %>%
+  mutate(percentage = n / sum(n) * 100)
+
+ggplot(gender_attrition_summary, aes(x = "", y = percentage, fill = Attrition)) +
   geom_bar(stat = "identity", width = 1) +
-  coord_polar("y", start = 0) +  
-  facet_wrap(~ Gender) +  
+  coord_polar(theta = "y") +
+  facet_wrap(~ Gender) +  # Delar upp diagrammet efter kön
   labs(
     title = "Płeć a rotacja",
     x = NULL,
     y = NULL,
     fill = "Rotacja (Attrition)"
   ) +
-  theme_minimal() +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid = element_blank()) + 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")),  
-            position = position_stack(vjust = 0.5)) +
-  scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))  
-
+  theme_void() +  # Tar bort onödig bakgrund och axlar
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))
+```
 
 ```
+Poniższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi więcej mężczyzn (17%) niż kobiet (14.6%)
 
 ```{r}
 library(ggplot2)
@@ -270,7 +279,7 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
 ```
 
-Z wykresu można zauważyć większą tendencję do rotacji, pracowników w młodszym wieku.
+Na wykresie można zauważyć większą tendencję do rotacji wśród pracowników w młodszym wieku.
 
 ```{r}
 complete_data %>%
@@ -289,5 +298,4 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
 ```
 
-Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom 
-# Wnioskowanie
+Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do domu.
