@@ -240,14 +240,14 @@ gender_attrition_summary <- complete_data %>%
 ggplot(gender_attrition_summary, aes(x = "", y = percentage, fill = Attrition)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar(theta = "y") +
-  facet_wrap(~ Gender) +  # Delar upp diagrammet efter kön
+  facet_wrap(~ Gender) +
   labs(
     title = "Płeć a rotacja",
     x = NULL,
     y = NULL,
     fill = "Rotacja (Attrition)"
   ) +
-  theme_void() +  # Tar bort onödig bakgrund och axlar
+  theme_void() +
   geom_text(aes(label = paste0(round(percentage, 1), "%")), position = position_stack(vjust = 0.5)) +
   scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))
 ```
