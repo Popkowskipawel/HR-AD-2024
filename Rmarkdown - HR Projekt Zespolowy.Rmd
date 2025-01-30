@@ -21,31 +21,34 @@ HR=read.csv("HR.csv")
 
 # Wstęp
 
-### W dzisiejszym dynamicznym świecie korporacyjnym, zrozumienie i przewidywanie odejść pracowników, określane w naszej analizie jako attrition, staje się kluczowe dla utrzymania stabilności i wzrostu organizacji. W niniejszym projekcie zbadaliśmy wpływ zmiennych w organizacji (np. stawka godzinowa, dział) oraz zmiennych osobistych (stan cywilny, odległość od pracy) na attrition. 
+W dzisiejszym dynamicznym świecie korporacyjnym, zrozumienie i przewidywanie odejść pracowników, określane w naszej analizie jako attrition, staje się kluczowe dla utrzymania stabilności i wzrostu organizacji. W niniejszym projekcie zbadaliśmy wpływ zmiennych w organizacji (np. stawka godzinowa, dział) oraz zmiennych osobistych (stan cywilny, odległość od pracy) na attrition.
 
-#Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zniejszyć rotację w firmie.
+Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zniejszyć rotację w firmie.
 
 # Data Cleansing, Wrangling
 
-### Poprzez dokładne czyszczenie danych, w tym usunięcie zbędnych kolumn oraz duplikatów, a także adresowanie brakujących i odstających wartości, tworzymy bazę do naszej analizy.
+Poprzez dokładne czyszczenie danych, w tym usunięcie zbędnych kolumn oraz duplikatów, a także adresowanie brakujących i odstających wartości, tworzymy bazę do naszej analizy.
 
 ## Usuwanie zbędnych kolumn
 
+Ze względu na brak zróżnicowania w kolumnach ,,EmployeeCount", "Over18" i ,,StandardHours", usuwamy je z naszego 
+zbioru danych.
 ```{r}
 HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
 ```
 
 ## Wykrycie duplikatów
-
+Jak można zauważyć, w naszym zbiorze danych nie wykryliśmy żadnych duplikatów, czyli wszystkie dane dotyczą innych osób
 ```{r}
 duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
+duplikaty
 ```
 
 ## Wartości brakujące
 
-###Do identyfikacji wartości brakujących użyliśmy biblioteki naniar. Przy użyciu funkcji vis_miss oraz gg_miss_var przygotowaliśmy wizualizację brakujących danych w naszym zbiorze. Przeanalizowaliśmy również procent brakujących danych. 
+Do identyfikacji wartości brakujących użyliśmy biblioteki naniar. Przy użyciu funkcji vis_miss oraz gg_miss_var przygotowaliśmy wizualizację brakujących danych w naszym zbiorze. Przeanalizowaliśmy również procent brakujących danych.
 
-###Każdy z powyższych kroków jest kluczowy dla uzyskania miarodajnych wartości i wiarygodnych wyników analizy.
+Każdy z powyższych kroków jest kluczowy dla uzyskania miarodajnych wartości i wiarygodnych wyników analizy.
 
 ```{r}
 library(naniar)
@@ -55,7 +58,7 @@ gg_miss_upset(HR)
 gg_miss_var(HR)
 ```
 
-###Zmienną Attrition zapisaną jako zwykły test zmieniliśmy na typ factor.
+Zmienną Attrition zapisaną jako zwykły test zmieniliśmy na typ factor.
 
 ```{r}
 HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
@@ -63,9 +66,9 @@ HR$Attrition <- factor(HR$Attrition, levels = c("No", "Yes"))
 
 ## Imputacja danych
 
-###Do imputacji danych wykorzystaliśmy metodę wielokrotnej imputacji przy użyciu biblioteki mice. Umożliwiło nam to estymację brakujących wartości na podstawie pozostałych zmiennych oraz charakteryzujących je wzorców. Co więcej, metoda wielokrotnej imputacji jest bardziej wiarygodna niż np. bazowanie na średniej. Pozwala ona zachować naturalny rozkład danych, w tym ich zmienność.
+Do imputacji danych wykorzystaliśmy metodę wielokrotnej imputacji przy użyciu biblioteki mice. Umożliwiło nam to estymację brakujących wartości na podstawie pozostałych zmiennych oraz charakteryzujących je wzorców. Co więcej, metoda wielokrotnej imputacji jest bardziej wiarygodna niż np. bazowanie na średniej. Pozwala ona zachować naturalny rozkład danych, w tym ich zmienność.
 
-```{r}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 library(mice)
 HR_imputed <- mice(HR, m= 5, maxit = 50, seed = 500)
 complete_data <- complete(HR_imputed)
@@ -73,7 +76,7 @@ complete_data <- complete(HR_imputed)
 
 ## Identyfikacja odstających danych
 
-### Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
+ Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
 
 ```{r}
 # Funkcja do identyfikacji odstających wartości (bazuje na IQR)
@@ -96,7 +99,7 @@ boxplot(complete_data$TotalWorkingYears)
 
 # Analiza opisowa
 
-### Do naszej analizyv opisowej użyliśmy biblioteki ggplot2. Dzięki niej stworzyliśmy wykres pudełkowy, który wizualizuje rozkład zarobków w zależności od attrition, czyli rotacji pracownika. Wykres pomaga nam zrozumieć, czy istnieje różnica w zarobkach pracowników, którzy opuścili firmę oraz tych, którzy zdecydowali się kontynuować swoją karierę. 
+Do naszej analizy opisowej użyliśmy biblioteki ggplot2. Dzięki niej stworzyliśmy wykres pudełkowy, który wizualizuje rozkład zarobków w zależności od attrition, czyli rotacji pracownika. Wykres pomaga nam zrozumieć, czy istnieje różnica w zarobkach pracowników, którzy opuścili firmę oraz tych, którzy zdecydowali się kontynuować swoją karierę.
 
 ```{r}
 library(ggplot2)
@@ -113,7 +116,8 @@ ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
   theme_minimal()
 
 ```
-### Na powyższym wykresie widzimy, że 
+
+Na powyższym wykresie widzimy, że
 
 # Wizualizacja danych
 
@@ -223,7 +227,7 @@ complete_data %>%
   scale_x_continuous(breaks = seq(min(complete_data$Age), max(complete_data$Age), by = 2)) +
   scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
 ```
-
+Z wykresu można zauważyć większą tendencję do rotacji, pracowników w młodszym wieku.
 ```{r}
 complete_data %>%
   group_by(DistanceFromHome, Attrition) %>%
@@ -240,5 +244,5 @@ complete_data %>%
   theme_minimal() + 
   scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
 ```
-
+Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom
 # Wnioskowanie
