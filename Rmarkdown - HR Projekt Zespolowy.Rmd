@@ -310,4 +310,44 @@ complete_data %>%
   ) +
   theme_minimal()
 ```
+#Podsumowanie projektu "Projekt Zespołowy HR"
+
+#Projekt "Projekt Zespołowy HR" skupił się na analizie czynników wpływających na rotację pracowników (attrition) w organizacji. Wykorzystując zestaw danych dotyczący zatrudnienia, przeprowadziliśmy kompleksowe przetwarzanie danych, analizę opisową oraz wizualizację wyników.
+
+#Główne etapy analizy
+
+#Przygotowanie danych
+
+#Usunięcie zbędnych kolumn i duplikatów.
+
+#Identyfikacja i imputacja brakujących danych przy użyciu metody wielokrotnej imputacji (mice).
+
+#Identyfikacja i analiza danych odstających.
+
+#Analiza opisowa
+
+#Wizualizacja zależności między zarobkami a rotacją pracowników.
+
+#Obliczenie statystyk opisowych dla dochodów w kontekście attrition.
+
+#Wizualizacja danych
+
+#Mapa korelacji: Ukazująca związki między zmiennymi liczbowymi.
+
+#Analiza nadgodzin: Pracownicy pracujący nadgodziny wykazują wyższy poziom rotacji.
+
+#Rotacja według stanowiska: Największa rotacja dotyczy Sales Representative (39.8%) i Laboratory Technician (24.3%).
+
+#Analiza płci: Rotacja jest wyższa wśród mężczyzn (17%) niż kobiet (14.6%).
+
+#Analiza wieku: Młodsi pracownicy są bardziej skłonni do zmiany pracy.
+
+#Odległość od miejsca pracy: Pracownicy mieszkający dalej od firmy mają wyższy współczynnik rotacji.
+
+#Wnioski
+
+#Na podstawie przeprowadzonych analiz możemy stwierdzić, że rotacja pracowników jest zależna od wielu czynników, takich jak zarobki, stanowisko, wiek, płeć oraz odległość do miejsca pracy. Wyniki mogą posłużyć organizacjom do opracowania skuteczniejszych strategii retencji pracowników, np. poprzez dostosowanie polityki wynagrodzeń, oferowanie elastycznych form zatrudnienia czy wprowadzenie programów wsparcia dla pracowników mieszkających daleko od biura.
+
+#Projekt dostarcza cennych wskazówek dla zespołów HR i menedżerów, pomagając w optymalizacji zarządzania zasobami ludzkimi oraz redukcji kosztów związanych z rotacją pracowników.
+
 
