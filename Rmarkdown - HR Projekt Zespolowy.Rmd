@@ -119,6 +119,28 @@ ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
 
 ```
 
+
+```{r kable_report2, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+library(gtsummary)
+complete_data %>%
+  select(MonthlyIncome,Attrition) %>%
+  tbl_summary(
+    by=Attrition,
+    type = all_continuous() ~ "continuous2",
+    statistic = all_continuous() ~ c(
+      "{mean}","{sd}",
+      "{median}" ,"{p25}","{p75}",
+      "{min}", "{max}"),
+    missing = "no",
+    label = MonthlyIncome ~ "Cena") %>%
+  modify_header(label ~ "**Zmienna**") %>%
+  modify_caption("**Tabela 1. Rozkład cen wg liczby pokoi**") %>%
+  bold_labels() %>% 
+  add_p(pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+
+
 Na powyższym wykresie widzimy, że
 
 # Wizualizacja danych
@@ -221,6 +243,7 @@ complete_data %>%
             position = position_stack(vjust = 0.5)) +
   scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))  
 
+
 ```
 
 ```{r}
@@ -266,4 +289,5 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
 ```
 
-Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom \# Wnioskowanie
+Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom 
+# Wnioskowanie
