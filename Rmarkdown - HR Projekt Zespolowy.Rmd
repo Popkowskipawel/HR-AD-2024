@@ -31,14 +31,16 @@ Poprzez dokładne czyszczenie danych, w tym usunięcie zbędnych kolumn oraz dup
 
 ## Usuwanie zbędnych kolumn
 
-Ze względu na brak zróżnicowania w kolumnach ,,EmployeeCount", "Over18" i ,,StandardHours", usuwamy je z naszego 
-zbioru danych.
+Ze względu na brak zróżnicowania w kolumnach ,,EmployeeCount", "Over18" i ,,StandardHours", usuwamy je z naszego zbioru danych.
+
 ```{r}
 HR <- HR %>% select(-EmployeeCount, -Over18, -StandardHours) 
 ```
 
 ## Wykrycie duplikatów
+
 Jak można zauważyć, w naszym zbiorze danych nie wykryliśmy żadnych duplikatów, czyli wszystkie dane dotyczą innych osób
+
 ```{r}
 duplikaty <- HR[duplicated(HR) | duplicated(HR, fromLast = TRUE), ]
 duplikaty
@@ -76,7 +78,7 @@ complete_data <- complete(HR_imputed)
 
 ## Identyfikacja odstających danych
 
- Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
+Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
 
 ```{r}
 # Funkcja do identyfikacji odstających wartości (bazuje na IQR)
@@ -227,7 +229,9 @@ complete_data %>%
   scale_x_continuous(breaks = seq(min(complete_data$Age), max(complete_data$Age), by = 2)) +
   scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
 ```
+
 Z wykresu można zauważyć większą tendencję do rotacji, pracowników w młodszym wieku.
+
 ```{r}
 complete_data %>%
   group_by(DistanceFromHome, Attrition) %>%
@@ -244,5 +248,5 @@ complete_data %>%
   theme_minimal() + 
   scale_fill_manual(values = c("Yes" = "#263238", "No" = "#e1bee7"))
 ```
-Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom
-# Wnioskowanie
+
+Powyższy wykres obrazuje wyższy poziom rotacji pracowników, mających większą odległość do dom \# Wnioskowanie
