@@ -23,7 +23,7 @@ HR=read.csv("HR.csv")
 
 W dzisiejszym dynamicznym świecie korporacyjnym, zrozumienie i przewidywanie odejść pracowników, określane w naszej analizie jako attrition, staje się kluczowe dla utrzymania stabilności i wzrostu organizacji. W niniejszym projekcie zbadaliśmy wpływ zmiennych w organizacji (np. stawka godzinowa, dział) oraz zmiennych osobistych (stan cywilny, odległość od pracy) na attrition.
 
-Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zniejszyć rotację w firmie.
+Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zmniejszyć rotację w firmie.
 
 # Data Cleansing, Wrangling
 
@@ -81,7 +81,6 @@ complete_data <- complete(HR_imputed)
 Do identyfikacji i wizualizacji danych odstających (outliers) użyliśmy poniższego kodu. Krok ten służy wykryciu błędów w danych lub nietypowych przypadków, które mogą zaburzyć analizę i doprowadzić nas do błędnych wniosków.
 
 ```{r}
-# Funkcja do identyfikacji odstających wartości (bazuje na IQR)
 find_outliers <- function(x) {
   Q1 <- quantile(x, 0.25, na.rm = TRUE)
   Q3 <- quantile(x, 0.75, na.rm = TRUE)
@@ -91,7 +90,6 @@ find_outliers <- function(x) {
   which(x < lower_bound | x > upper_bound)
 }
 
-# Zidentyfikuj odstające wartości dla kolumn liczbowych
 boxplot(complete_data$YearsAtCompany)
 boxplot(complete_data$NumCompaniesWorked)
 boxplot(complete_data$PerformanceRating)
@@ -107,13 +105,12 @@ Do naszej analizy opisowej użyliśmy biblioteki ggplot2. Dzięki niej stworzyli
 library(ggplot2)
 library(dplyr)
 
-# Boxplot 1: Rozkład MonthlyIncome w zależności od Attrition
 ggplot(complete_data, aes(x = Attrition, y = MonthlyIncome, fill = Attrition)) +
   geom_boxplot() +
   labs(
-    title = "Rozkład miesięcznych zarobków w zależności od rotacji",
+    title = "Rozkład miesięcznych dochodów w zależności od rotacji",
     x = "Rotacja (Attrition)",
-    y = "Miesięczne zarobki (Monthly Income)"
+    y = "Miesięczne dochody (Monthly Income)"
   ) +
   theme_minimal()
 
@@ -140,27 +137,23 @@ complete_data %>%
   add_p(pvalue_fun = ~ style_pvalue(.x, digits = 2))
 ```
 
-
 # Wizualizacja danych
 
 ## Mapa korelacji
 
-Wykreślając mapę korelacji tworzymy macierz, która prezentuje relacje między różnymi zmiennymi numerycznymi w zbiorze danych. 
+Wykreślając mapę korelacji tworzymy macierz, która prezentuje relacje między różnymi zmiennymi numerycznymi w zbiorze danych.
 
 Im intensywniejszy kolor, tym silniejsza jest korelacja.
 
 Czerwień wskazuje na dodatnią korelację, niebieskie kolory oznaczają korelację ujemną, a biel/szarość oznacza brak istotnej korelacji między zmiennymi.
 
-W celu stworzenia poniższej mapy, zmieniliśmy zmienne kategoryczne nominalne na zmienne numeryczne. 
+W celu stworzenia poniższej mapy, zmieniliśmy zmienne kategoryczne nominalne na zmienne numeryczne.
 
 ```{r}
-#Mapa korelacji vs. Attrition
 complete_data$Attrition <- ifelse(complete_data$Attrition == "Yes", 1, 0)
 dane_numeryczne <- complete_data[sapply(complete_data, is.numeric)]
 korelacje <- cor(dane_numeryczne, use = "complete.obs")
 
-install.packages("ggplot2")
-install.packages("reshape2")
 library(ggplot2)
 library(reshape2)
 
@@ -175,29 +168,30 @@ ggplot(data = mapa_korelacji, aes(x = Var1, y = Var2, fill = value)) +
 
 ```{r}
 library(ggplot2)
-
+complete_data$Attrition <- ifelse(complete_data$Attrition == 1, "Yes", "No")
 complete_data$OverTime <- as.factor(complete_data$OverTime)
 ggplot(complete_data, aes(x = "", fill = Attrition)) +
   geom_bar(position = "fill") +  
   coord_polar(theta = "y") +  
   labs(
     title = "Procentowy udział rotacji w zależności od nadgodzin",
-    fill = "Rotacja (Attrition)"
+    fill = "Rotacja (Attrition)" ,
+    x = NULL, 
+    y = NULL
   ) +
   scale_y_continuous(labels = scales::percent) +  
-  facet_wrap(~OverTime) +
+facet_wrap(~OverTime, labeller = labeller(OverTime = c("No" = "Brak nadgodzin", "Yes" = "Nadgodziny"))) +
   theme_minimal() +
-  theme(axis.text.x = element_blank())  
+  theme(axis.text.x = element_blank(),  
+        axis.text.y = element_blank(), 
+        axis.ticks = element_blank(),  
+        panel.grid = element_blank())
 
 ```
 
 Na powyższym wykresie kołowym widzimy dane dotyczące wpływu nadgodzin na decyzję o odejściu z pracy. Wyższy odsetek osób opuszczających firmę w grupie osób z nadgodzinami może sugerować, że nadgodziny wpływają negatywnie na satysfakcję z pracy i są jedną z przyczyn jej zmiany.
 
-Z kolei wykres słupkowy ilustruje procentowy udział rotacji pracowników według stanowiska. Wartość 0 oraz kolor czerwony oznaczają pracowników, którzy zdecydowali się pozostać w firmie. Wartość 1 oraz kolor turkusowy oznaczają osoby, które odeszły z firmy.
 
-Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją. 
-
-Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Skincare Representatives (7.6%). 
 
 ```{r}
 library(ggplot2)
@@ -221,12 +215,13 @@ ggplot(percent_data, aes(x = JobRole, y = percentage, fill = Attrition)) +
     fill = "Rotacja (Attrition)"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7.5, face = "bold")) + 
   geom_text(aes(label = paste0(round(percentage, 1), "%")),  
             position = position_stack(vjust = 0.5), size = 3)
 ```
-
-Poniższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi więcej mężczyzn (17%) niż kobiet (14.6%).
+Z kolei następny wykres - słupkowy, ilustruje procentowy udział rotacji pracowników według stanowiska.
+Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją.
+Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Healthcare Representatives (7.6%).
 
 ```{r}
 library(ggplot2)
@@ -237,7 +232,7 @@ complete_data$Attrition <- as.factor(complete_data$Attrition)
 
 complete_data %>%
   group_by(Gender, Attrition) %>%
-  summarise(count = n()) %>%
+   summarise(count = n()) %>%
   mutate(percentage = count / sum(count) * 100) %>%
   ggplot(aes(x = "", y = percentage, fill = Attrition)) +
   geom_bar(stat = "identity", width = 1) +
@@ -258,6 +253,7 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#ccffcc", "No" = "#9f5f9f"))  
 ```
 
+Powyższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi stosunkowo więcej mężczyzn (17%) niż kobiet (14.6%).
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -266,7 +262,7 @@ complete_data$Age <- as.numeric(as.character(complete_data$Age))
 
 complete_data %>%
   group_by(Age, Attrition) %>%
-  summarise(count = n()) %>%
+  summarise(count = n(), .groups = "drop") %>%
   group_by(Age) %>%
   mutate(percentage = count / sum(count) * 100) %>%
   ggplot(aes(x = Age, y = percentage, fill = Attrition)) +
@@ -282,12 +278,13 @@ complete_data %>%
   scale_fill_manual(values = c("Yes" = "#A8A8A8", "No" = "#ffebee"))
 ```
 
-Z wykresu można zauważyć większą tendencję do rotacji pracowników w młodszym wieku. Wraz ze wzrostem wieku, poza niewielkimi wyjątkami, wzrasta również rotacja.
+Z wykresu można zaobserwować większą tendencję do rotacji pracowników w młodszym wieku. Dodatkowo po 40 roku życia widać niewielką tendencję wzrostową rotacji, wraz ze wzrostem wieku, do około 58 roku życia.
 
 ```{r}
+
 complete_data %>%
   group_by(DistanceFromHome, Attrition) %>%
-  summarise(count = n()) %>%
+  summarise(count = n(), .groups = "drop") %>%
   group_by(DistanceFromHome) %>%
   mutate(percentage = count / sum(count) * 100) %>%
   ggplot(aes(x = DistanceFromHome, y = percentage, fill = Attrition)) +
