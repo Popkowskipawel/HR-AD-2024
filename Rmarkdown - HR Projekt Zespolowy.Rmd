@@ -191,8 +191,6 @@ facet_wrap(~OverTime, labeller = labeller(OverTime = c("No" = "Brak nadgodzin", 
 
 Na powyższym wykresie kołowym widzimy dane dotyczące wpływu nadgodzin na decyzję o odejściu z pracy. Wyższy odsetek osób opuszczających firmę w grupie osób z nadgodzinami może sugerować, że nadgodziny wpływają negatywnie na satysfakcję z pracy i są jedną z przyczyn jej zmiany.
 
-
-
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -219,9 +217,8 @@ ggplot(percent_data, aes(x = JobRole, y = percentage, fill = Attrition)) +
   geom_text(aes(label = paste0(round(percentage, 1), "%")),  
             position = position_stack(vjust = 0.5), size = 3)
 ```
-Z kolei następny wykres - słupkowy, ilustruje procentowy udział rotacji pracowników według stanowiska.
-Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją.
-Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Healthcare Representatives (7.6%).
+
+Z kolei następny wykres - słupkowy, ilustruje procentowy udział rotacji pracowników według stanowiska. Sales Representative (39.8%), Laboratory Technician (24.3%) oraz Human Resources (21.2%) to stanowiska z największą rotacją. Najmniejszą rotację odnotowano na stanowisku Research Directora (3.8%), stanowiskach managerskich (5.9%) oraz wśród Healthcare Representatives (7.6%).
 
 ```{r}
 library(ggplot2)
@@ -254,6 +251,7 @@ complete_data %>%
 ```
 
 Powyższe wykresy kołowe prezentują procentowy podział rotacji pracowników ze względu na płeć. Widzimy na nich, że z firmy odchodzi stosunkowo więcej mężczyzn (17%) niż kobiet (14.6%).
+
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -301,38 +299,38 @@ complete_data %>%
 Powyższy wykres obrazuje rozkład rotacji według dystansu od miejsca pracy. Większość pracowników nie decyduje się na zmianę pracy ze względu na czas dojazdu, jednak widzimy na wykresie tendencję wzrostową wraz ze wrostem liczby kilometrów oddzielających pracownika od miejsca pracy. Szczególnie zauważalne jest to dla wartości powyżej 8 km.
 
 # Wnioskowanie
+
 ```{r}
 complete_data$Attrition <- as.factor(complete_data$Attrition)  
 anova_result <- aov(MonthlyIncome ~ Attrition, data = complete_data)
 summary(anova_result)
 ```
-P-value jest znacznie mniejsze niż 0.05, co oznacza, że różnica wieku między grupami Attrition (Yes vs. No) jest istotna statystycznie.
-Porównanie dokładne parami
+
+P-value jest znacznie mniejsze niż 0.05, co oznacza, że różnica wieku między grupami Attrition (Yes vs. No) jest istotna statystycznie. Porównanie dokładne parami
+
 ```{r}
 library(ggstatsplot)
 ggbetweenstats(data=complete_data,x=Attrition,y=MonthlyIncome,type="np",pairwise.display="ns",p.adjust.method="fdr")
 ```
-Interpretacja wyników
-średnie wynagrodzenie w grupie "No" (pracownicy, którzy zostali) jest wyższe (Me = 5204) niż w grupie "Yes" (pracownicy, którzy odeszli) (Me = 3270.50).
+
+Interpretacja wyników średnie wynagrodzenie w grupie "No" (pracownicy, którzy zostali) jest wyższe (Me = 5204) niż w grupie "Yes" (pracownicy, którzy odeszli) (Me = 3270.50).
 
 W tym teście p-value rownież jest mniejsze niż 0.05, co wskazuje na to, że różnica w wynagrodzeniu między grupami nie jest przypadkowa. Jest statystycznie istotna.
 
 Współczynnik efektu (r-biserial = 0.30) wskazuje na umiarkowaną siłę efektu, co oznacza, że wynagrodzenie ma pewien wpływ na decyzję o odejściu z firmy.
 
-Test F-Studenta
+Test t-Studenta
+
 ```{r}
 complete_data$Attrition <- as.factor(complete_data$Attrition)
 t_test_result <- t.test(MonthlyIncome ~ Attrition, data = complete_data, var.equal = FALSE) 
-
-# Wyświetlenie wyników
 print(t_test_result)
+{r results='asis'}
+t.test(MonthlyIncome ~ Attrition, data = df, var.equal = FALSE)
 ```
-Bardzo mała wartość p-value(< 0.05)
-Odrzucamy hipotezę zerową H₀ → Wynagrodzenie istotnie różni się między grupami.
-t = -10.5
 
-Wysoka wartość bezwzględna t oznacza dużą różnicę między grupami.
-95% przedział ufności: [-2150.24, -1350.56]
+Bardzo mała wartość p-value(< 0.05) Odrzucamy hipotezę zerową H₀ → Wynagrodzenie istotnie różni się między grupami. t = -10.5
 
-Przedział nie obejmuje zera, więc różnica jest istotna statystycznie.
-Oznacza to, że średnie wynagrodzenie osób, które odeszły, było od 1350 do 2150 niższe niż tych, którzy zostali.
+Wysoka wartość bezwzględna t oznacza dużą różnicę między grupami. 95% przedział ufności: [-2150.24, -1350.56]
+
+Przedział nie obejmuje zera, więc różnica jest istotna statystycznie. Oznacza to, że średnie wynagrodzenie osób, które odeszły, było od 1350 do 2150 niższe niż tych, którzy zostali.
