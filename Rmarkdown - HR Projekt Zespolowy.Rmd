@@ -13,18 +13,18 @@ output:
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-```{r}
-library(dplyr)
-library(readr)
-HR=read.csv("HR.csv")
-```
+
 
 # Wstęp
 
 W dzisiejszym dynamicznym świecie korporacyjnym, zrozumienie i przewidywanie odejść pracowników, określane w naszej analizie jako attrition, staje się kluczowe dla utrzymania stabilności i wzrostu organizacji. W niniejszym projekcie zbadaliśmy wpływ zmiennych w organizacji (np. stawka godzinowa, dział) oraz zmiennych osobistych (stan cywilny, odległość od pracy) na attrition.
 
 Naszym celem była identyfikacja najbardziej istotnych czynników wpływających na decyzję pracowników o zmianie firmy. Wierzymy, że wyniki tego projektu mogłyby pomóc lepiej zrozumieć przyczyny takich decyzji oraz zmniejszyć rotację w firmie.
-
+```{r}
+library(dplyr)
+library(readr)
+HR=read.csv("HR.csv")
+```
 # Data Cleansing, Wrangling
 
 Poprzez dokładne czyszczenie danych, w tym usunięcie zbędnych kolumn oraz duplikatów, a także adresowanie brakujących i odstających wartości, tworzymy bazę do naszej analizy.
@@ -314,7 +314,7 @@ library(ggstatsplot)
 ggbetweenstats(data=complete_data,x=Attrition,y=MonthlyIncome,type="np",pairwise.display="ns",p.adjust.method="fdr")
 ```
 
-Interpretacja wyników średnie wynagrodzenie w grupie "No" (pracownicy, którzy zostali) jest wyższe (Me = 5204) niż w grupie "Yes" (pracownicy, którzy odeszli) (Me = 3270.50).
+Interpretacja wyników: średnie wynagrodzenie w grupie "No" (pracownicy, którzy zostali) jest wyższe (Me = 5204) niż w grupie "Yes" (pracownicy, którzy odeszli) (Me = 3270.50).
 
 W tym teście p-value rownież jest mniejsze niż 0.05, co wskazuje na to, że różnica w wynagrodzeniu między grupami nie jest przypadkowa. Jest statystycznie istotna.
 
@@ -334,30 +334,20 @@ Wysoka wartość bezwzględna t oznacza dużą różnicę między grupami. 95% p
 
 Przedział nie obejmuje zera, więc różnica jest istotna statystycznie. Oznacza to, że średnie wynagrodzenie osób, które odeszły, było od 1350 do 2150 niższe niż tych, którzy zostali.
 
-#Podsumowanie
+# Podsumowanie
 Podsumowanie projektu "Projekt Zespołowy HR"
 Projekt "Projekt Zespołowy HR" skupił się na analizie czynników wpływających na rotację pracowników (attrition) w organizacji. Wykorzystując zestaw danych dotyczący zatrudnienia, przeprowadziliśmy kompleksowe przetwarzanie danych, analizę opisową oraz wizualizację wyników.
 
-Główne etapy analizy:
+Po przygotowaniu danych do analizy: usunięciu zbędnych kolumn oraz duplikatów, imputacji oraz analizy danych odstających, podsumowaliśmy dane przez analizę opisową. Wykazaliśmy i zwizualizowaliśmy rozkład dochodów pracowników względem rotacji. 
+Następnie dzięki wizualizacji danych przy pomocy wykresów słupkowych, czy kołowych, zauważyliśmy pewne tendencje wpływające na zmienną attrition - między innymi najczęściej rotowane stanowiska czy aspekt wieku, płci i odległości od miejsca pracy.  
+Dzięki Testom statystycznym(t-studenta, ANOVA) wykazaliśmy istotność statystyczną między wysokością dochodów, a rotacją.
 
-1.Przygotowanie danych:
--Usunięcie zbędnych kolumn i duplikatów.
--Identyfikacja i imputacja brakujących danych przy użyciu metody wielokrotnej imputacji (mice).
--Identyfikacja i analiza danych odstających.
-
-2.Analiza opisowa:
--Wizualizacja zależności między zarobkami a rotacją pracowników.
--Obliczenie statystyk opisowych dla dochodów w kontekście attrition.
-
-3. Wizualizacja danych:
--Mapa korelacji: Ukazująca związki między zmiennymi liczbowymi.
--Analiza nadgodzin: Pracownicy pracujący nadgodziny wykazują wyższy poziom rotacji.
--Rotacja według stanowiska: Największa rotacja dotyczy Sales Representative (39.8%) i Laboratory Technician (24.3%).
--Analiza płci: Rotacja jest wyższa wśród mężczyzn (17%) niż kobiet (14.6%).
--Analiza wieku: Młodsi pracownicy są bardziej skłonni do zmiany pracy.
--Odległość od miejsca pracy: Pracownicy mieszkający dalej od firmy mają wyższy współczynnik rotacji.
-
-Wnioski
 Na podstawie przeprowadzonych analiz możemy stwierdzić, że rotacja pracowników jest zależna od wielu czynników, takich jak zarobki, stanowisko, wiek, płeć oraz odległość do miejsca pracy. Wyniki mogą posłużyć organizacjom do opracowania skuteczniejszych strategii retencji pracowników, np. poprzez dostosowanie polityki wynagrodzeń, oferowanie elastycznych form zatrudnienia czy wprowadzenie programów wsparcia dla pracowników mieszkających daleko od biura.
+
 Projekt dostarcza cennych wskazówek dla zespołów HR i menedżerów, pomagając w optymalizacji zarządzania zasobami ludzkimi oraz redukcji kosztów związanych z rotacją pracowników.
+
+
+
+
+
 
