@@ -306,8 +306,9 @@ anova_result <- aov(MonthlyIncome ~ Attrition, data = complete_data)
 summary(anova_result)
 ```
 
-P-value jest znacznie mniejsze niż 0.05, co oznacza, że różnica wieku między grupami Attrition (Yes vs. No) jest istotna statystycznie. Porównanie dokładne parami
+P-value jest znacznie mniejsze niż 0.05, co oznacza, że różnica dochodów między grupami Attrition (Yes vs. No) jest istotna statystycznie. 
 
+Porównanie dokładne parami
 ```{r}
 library(ggstatsplot)
 ggbetweenstats(data=complete_data,x=Attrition,y=MonthlyIncome,type="np",pairwise.display="ns",p.adjust.method="fdr")
@@ -325,8 +326,6 @@ Test t-Studenta
 complete_data$Attrition <- as.factor(complete_data$Attrition)
 t_test_result <- t.test(MonthlyIncome ~ Attrition, data = complete_data, var.equal = FALSE) 
 print(t_test_result)
-{r results='asis'}
-t.test(MonthlyIncome ~ Attrition, data = df, var.equal = FALSE)
 ```
 
 Bardzo mała wartość p-value(< 0.05) Odrzucamy hipotezę zerową H₀ → Wynagrodzenie istotnie różni się między grupami. t = -10.5
